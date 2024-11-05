@@ -1,0 +1,95 @@
+Escenario 1: Pruebas de autenticación de usuarios
+
+Caso de prueba original (pseudocódigo):
+TEST UserAuthentication
+  ASSERT_TRUE(authenticate("validUser", "validPass"), "Should succeed with correct credentials")
+  ASSERT_FALSE(authenticate("validUser", "wrongPass"), "Should fail with wrong credentials")
+END TEST
+
+Problema identificado: El caso original no mencionaba el aislamiento del estado de autenticacion entre pruebas.
+Modificación: Cada prueba ahora verifica solo un aspecto de la funcionalidad de autenticación para asegurar el aislamiento y evitar dependencias.
+Agrege una prueba adicional para verificar que el sistema falle con un nombre de usuario inválido,
+aumentando la cobertura de escenarios posibles de autenticación.
+
+TEST UserAuthentication_Success
+  ASSERT_TRUE(authenticate("validUser", "validPass"), "Authentication should succeed with correct credentials")
+END TEST
+
+TEST UserAuthentication_Fail_WrongPassword
+  ASSERT_FALSE(authenticate("validUser", "wrongPass"), "Should fail with wrong credentials")
+END TEST
+
+TEST UserAuthentication_Fail_WrongUsername
+  ASSERT_FALSE(authenticate("invalidUser", "validPass"), "Should fail with wrong credentials")
+END TEST
+
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+
+
+Escenario 2: Funciones de procesamiento de datos
+
+Caso de prueba original (pseudocódigo):
+TEST DataProcessing
+  DATA data = fetchData()
+  TRY
+    processData(data)
+    ASSERT_TRUE(data.processedSuccessfully, "Data should be processed successfully")
+  CATCH error
+    ASSERT_EQUALS("Data processing error", error.message, "Should handle processing errors")
+  END TRY
+END TEST
+
+Problema identificado: El caso original no separaba claramente la obtención de datos del procesamiento, lo que podría dificultar la identificación de problemas.
+Modificación: Separe las pruebas de obtención, procesamiento y manejo de errores de datos para una mejor claridad y aislamiento de las funcionalidades.
+
+TEST DataFetch_NotNull
+    DATA data = fetchData()
+    ASSERT_NOT_NULL(data, "Data should not be null")
+END TEST
+
+TEST DataProcessing_Success
+  DATA data = fetchData()
+  TRY
+    processData(data)
+    ASSERT_TRUE(data.processedSuccessfully, "Data should be processed successfully")
+END TEST
+
+TEST DataProcessing_Fail
+  DATA data = fetchData()
+  TRY
+    processData(data)
+  CATCH error
+    ASSERT_EQUALS("Data processing error", error.message, "Should handle processing errors")
+  END TRY
+END TEST
+
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+
+Escenario 3: Capacidad de respuesta de la interfaz de usuario
+
+Caso de prueba original (pseudocódigo):
+TEST UIResponsiveness
+  UI_COMPONENT uiComponent = setupUIComponent(1024)
+  ASSERT_TRUE(uiComponent.adjustsToScreenSize(1024), "UI should adjust to width of 1024 pixels")
+END TEST
+
+Problema identificado: La prueba asumía que el componente de interfaz de usuario se ajustaría al tamaño de pantalla sin especificar el aislamiento de otros casos de interfaz.
+Modificación: Cada tamaño de pantalla se prueba en un caso independiente para asegurar que cada test sea aislado y enfoque en un único aspecto de la funcionalidad de respuesta de la interfaz,
+aumentando la cobertura de escenarios posibles.
+
+TEST UIResponsiveness_1024
+  UI_COMPONENT uiComponent = setupUIComponent(1024)
+  ASSERT_TRUE(uiComponent.adjustsToScreenSize(1024), "UI should adjust to width of 1024 pixels")
+END TEST
+
+TEST UIResponsiveness_800
+  UI_COMPONENT uiComponent = setupUIComponent(800)
+  ASSERT_TRUE(uiComponent.adjustsToScreenSize(800), "UI should adjust to width of 800 pixels")
+END TEST
+
+TEST UIResponsiveness_1920
+  UI_COMPONENT uiComponent = setupUIComponent(1920)
+  ASSERT_TRUE(uiComponent.adjustsToScreenSize(1920), "UI should adjust to width of 1920 pixels")
+END TEST
