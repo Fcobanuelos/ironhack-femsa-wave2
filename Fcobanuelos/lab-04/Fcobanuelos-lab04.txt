@@ -1,0 +1,94 @@
+Escenario 1: Pseudocódigo para el sistema de autenticación
+
+Ejemplo de pseudocódigo:
+FUNCTION authenticateUser(username, password):
+  QUERY database WITH username AND password
+  IF found RETURN True
+  ELSE RETURN False
+
+Vulnerabilidades identificadas
+DAST:
+- Inyección SQL: La consulta a la base de datos con username y password es susceptible a ataques de inyección SQL si no se utilizan consultas preparadas o parámetros seguros.
+- Fuerza bruta: No hay medidas para prevenir ataques de fuerza bruta, como limitar el número de intentos de inicio de sesión.
+SAST:
+- Almacenamiento de contraseñas: No se menciona el uso de hashing para las contraseñas almacenadas en la base de datos, lo que puede comprometer la seguridad en caso de una brecha de datos.
+
+
+Plan de mitigación:
+- Utilizar consultas preparadas para evitar inyecciones SQL.
+- Almacenar contraseñas utilizando un algoritmo de hashing seguro como bcrypt.
+- Implementar mecanismos de bloqueo de cuenta o CAPTCHA después de varios intentos fallidos de inicio de sesión.
+
+Solución propuesta:
+Utiliza consultas preparadas para evitar inyecciones SQL, aplica un algoritmo de hashing seguro a las contraseñas antes de almacenarlas
+o compararlas en la base de datos y aunque no se muestra en el pseudocódigo, se recomienda implementar mecanismos adicionales como bloqueo de cuenta o CAPTCHA después de varios intentos fallidos.
+
+FUNCTION authenticateUser(username, password):
+  hashedPassword = hash(password)
+  QUERY database WITH username AND hashedPassword USING prepared statement
+  IF found RETURN True
+  ELSE RETURN False
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Escenario 2: Esquema de autenticación JWT
+
+Esquema de diseño:
+DEFINE FUNCTION generateJWT(userCredentials):
+  IF validateCredentials(userCredentials):
+    SET tokenExpiration = currentTime + 3600 // Token expires in one hour
+    RETURN encrypt(userCredentials + tokenExpiration, secretKey)
+  ELSE:
+    RETURN error
+
+Vulnerabilidades identificadas
+SAST:
+- Almacenamiento de la clave secreta: La clave secreta debe ser almacenada de manera segura para evitar compromisos.
+DAST:
+- Revocación de tokens: No se menciona un mecanismo para revocar tokens antes de su expiración en caso de compromisos.
+
+Plan de mitigación:
+- Almacenar la clave secreta en un almacén seguro, como AWS Secrets Manager o Azure Key Vault.
+- Implementar un mecanismo de lista negra para revocar tokens antes de su expiración.
+
+Solución propuesta:
+Se asegura que la clave secreta se almacene de manera segura y se aplica revocación de tokens esto implementa un almacenamiento de tokens para permitir la revocación de tokens antes de su expiración.
+DEFINE FUNCTION generateJWT(userCredentials):
+  IF validateCredentials(userCredentials):
+    SET tokenExpiration = currentTime + 3600 // Token expires in one hour
+    SET token = encrypt(userCredentials + tokenExpiration, secretKey)
+    STORE token IN tokenStore
+    RETURN token
+  ELSE:
+    RETURN error
+
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Escenario 3: Plan de comunicación segura de datos
+
+Esquema de Protección de Datos:
+PLAN secureDataCommunication:
+  IMPLEMENT SSL/TLS for all data in transit
+  USE encrypted storage solutions for data at rest
+  ENSURE all data exchanges comply with HTTPS protocols
+
+Vulnerabilidades identificadas
+SAST:
+- Configuración incorrecta de SSL/TLS: La implementación de SSL/TLS debe ser configurada correctamente para evitar vulnerabilidades.
+- Gestión de claves: Las claves utilizadas para encriptar datos deben ser gestionadas de manera segura.
+DAST:
+- Cumplimiento de protocolos: Asegurarse de que todos los intercambios de datos cumplan con los protocolos HTTPS puede ser complejo y propenso a errores.
+
+Plan de mitigación:
+- Utilizar bibliotecas y herramientas confiables para la configuración de SSL/TLS.
+- Almacenar y gestionar claves de encriptación en un almacén seguro.
+- Implementar pruebas automatizadas para verificar el cumplimiento de los protocolos HTTPS.
+
+Solución propuesta:
+Utilizar bibliotecas y herramientas confiables para la configuración de SSL/TLS para asegurar que todos los datos en tránsito estén encriptado.
+Asegurar que las claves de encriptación se gestionen de manera segura e implementar pruebas automatizadas para verificar el cumplimiento de los protocolos HTTPS.
+PLAN secureDataCommunication:
+  IMPLEMENT SSL/TLS for all data in transit USING trusted libraries
+  USE encrypted storage solutions for data at rest WITH secure key management
+  ENSURE all data exchanges comply with HTTPS protocols THROUGH automated testing
