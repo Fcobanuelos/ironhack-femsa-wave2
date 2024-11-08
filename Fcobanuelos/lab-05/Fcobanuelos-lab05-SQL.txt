@@ -1,0 +1,34 @@
+CASO 1:
+Consulta de pedidos: recupera pedidos con muchos artículos y calcula el precio total.
+
+SELECT Orders.OrderID, SUM(OrderDetails.Quantity * OrderDetails.UnitPrice) AS TotalPrice
+FROM Orders
+JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+WHERE OrderDetails.Quantity > 10
+GROUP BY Orders.OrderID;
+
+Optimización propuesta:
+- Crear índices en las columnas OrderID y Quantity: Los índices en estas columnas mejoran la velocidad de la consulta al permitir búsquedas más rápidas y eficientes en las tablas OrderDetails y Orders.
+- Asegurarse de que las columnas utilizadas en la cláusula JOIN y WHERE estén indexadas, esto reduce el tiempo de búsqueda y mejora el rendimiento de la consulta.
+
+CREATE INDEX idx_orderdetails_orderid ON OrderDetails(OrderID);
+CREATE INDEX idx_orderdetails_quantity ON OrderDetails(Quantity);
+
+SELECT Orders.OrderID, SUM(OrderDetails.Quantity * OrderDetails.UnitPrice) AS TotalPrice
+FROM Orders
+JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+WHERE OrderDetails.Quantity > 10
+GROUP BY Orders.OrderID;
+
+CASO 2:
+Consulta de cliente: encuentre todos los clientes de Londres y ordene por nombre de cliente.
+SELECT CustomerName FROM Customers WHERE City = 'London' ORDER BY CustomerName;
+
+Optimización propuesta:
+- Crear un índice en la columna City: Esto acelera la búsqueda de clientes en Londres.
+- Crear un índice en la columna CustomerName: Esto mejora el rendimiento del ordenamiento al permitir que la base de datos ordene los resultados más rápidamente.
+
+CREATE INDEX idx_customers_city ON Customers(City);
+CREATE INDEX idx_customers_customername ON Customers(CustomerName);
+
+SELECT CustomerName FROM Customers WHERE City = 'London' ORDER BY CustomerName;

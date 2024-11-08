@@ -1,0 +1,33 @@
+CASO 1:
+Consulta de publicaciones de usuario: recupera las publicaciones activas más populares y muestra su título y número de “Me gusta”.
+
+db.posts
+  .find({ status: "active" }, { title: 1, likes: 1 })
+  .sort({ likes: -1 });
+
+Optimización propuesta:
+Crear un índice compuesto en los campos status y likes: Esto mejora la eficiencia de la consulta al permitir búsquedas y ordenamientos más rápidos en la colección posts.
+
+db.posts.createIndex({ status: 1, likes: -1 });
+
+db.posts
+  .find({ status: "active" }, { title: 1, likes: 1 })
+  .sort({ likes: -1 });
+
+CASO 2:
+Agregación de datos de usuario: resuma la cantidad de usuarios activos por ubicación.
+
+db.users.aggregate([
+  { $match: { status: "active" } },
+  { $group: { _id: "$location", totalUsers: { $sum: 1 } } },
+]);
+
+Optimización propuesta:
+Crear un índice en el campo status: Esto mejora la eficiencia del filtrado al permitir que la base de datos encuentre rápidamente los documentos con el estado "activo".
+
+db.users.createIndex({ status: 1 });
+
+db.users.aggregate([
+  { $match: { status: "active" } },
+  { $group: { _id: "$location", totalUsers: { $sum: 1 } } },
+]);
