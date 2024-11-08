@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  postgresql:
+    image: postgres
+    environment:
+      POSTGRES_USER: spn-user-bp
+      POSTGRES_PASSWORD: femsa2023
+      POSTGRES_DB: midbunobp
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql
+
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "127.0.0.1:4510-4559:4510-4559"
+      - "127.0.0.1:4566:4566"
+    environment:
+      - HOST_TMP_FOLDER=/opt/localstack/tmp
+      - AWS_ACCESS_KEY_ID=TEST_ACCESS_KEY
+      - AWS_SECRET_ACCESS_KEY=TEST_SECRET_KEY
+      - AWS_DEFAULT_REGION=us-west-1
+      - SERVICES=events
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/opt/localstack/tmp:/opt/localstack/tmp"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./event-pattern.json:/opt/code/localstack/localstack/services/events/event-pattern.json"
