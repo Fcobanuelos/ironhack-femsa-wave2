@@ -8,6 +8,9 @@ import jakarta.persistence.ElementCollection;
 import java.util.List;
 import lombok.Data;
 
+/**
+ * The type Order.
+ */
 @Entity
 @Data
 public class Order {
