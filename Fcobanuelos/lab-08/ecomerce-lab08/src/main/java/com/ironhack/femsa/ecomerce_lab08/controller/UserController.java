@@ -2,7 +2,7 @@ package com.ironhack.femsa.ecomerce_lab08.controller;
 
 import com.ironhack.femsa.ecomerce_lab08.dto.LoginRequest;
 import com.ironhack.femsa.ecomerce_lab08.dto.RegisterUserRequest;
-import com.ironhack.femsa.ecomerce_lab08.model.User;
+import com.ironhack.femsa.ecomerce_lab08.model.Customer;
 import com.ironhack.femsa.ecomerce_lab08.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,11 +41,11 @@ public class UserController {
     @Operation(summary = "Registro de usuario",
             description = "Permite registrar un nuevo usuario en el sistema")
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserRequest request) {
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        return ResponseEntity.ok(userService.registerUser(user));
+        Customer customer = new Customer();
+        customer.setUsername(request.getUsername());
+        customer.setEmail(request.getEmail());
+        customer.setPassword(request.getPassword());
+        return ResponseEntity.ok(userService.registerUser(customer));
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.ironhack.femsa.ecomerce_lab08.controller;
 
 import com.ironhack.femsa.ecomerce_lab08.dto.CreateOrderRequest;
-import com.ironhack.femsa.ecomerce_lab08.model.Order;
+import com.ironhack.femsa.ecomerce_lab08.model.OrderCustomer;
 import com.ironhack.femsa.ecomerce_lab08.model.OrderItem;
 import com.ironhack.femsa.ecomerce_lab08.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,15 +41,15 @@ public class OrderController {
     @PostMapping("/orders")
     @Operation(summary = "Crear pedido", description = "Permite a un usuario crear un nuevo pedido")
     public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request) {
-        Order order = new Order();
-        order.setUserId(request.getUserId());
-        order.setProducts(request.getProducts().stream()
+        OrderCustomer orderCustomer = new OrderCustomer();
+        orderCustomer.setUserId(request.getUserId());
+        orderCustomer.setProducts(request.getProducts().stream()
                 .map(p -> {
                     OrderItem item = new OrderItem();
                     item.setProductId(p.getProductId());
                     item.setQuantity(p.getQuantity());
                     return item;
                 }).toList());
-        return ResponseEntity.ok(orderService.createOrder(order));
+        return ResponseEntity.ok(orderService.createOrder(orderCustomer));
     }
 }

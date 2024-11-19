@@ -1,6 +1,6 @@
 package com.ironhack.femsa.ecomerce_lab08.service;
 
-import com.ironhack.femsa.ecomerce_lab08.model.User;
+import com.ironhack.femsa.ecomerce_lab08.model.Customer;
 
 import java.util.Optional;
 
@@ -12,10 +12,10 @@ public interface UserService {
     /**
      * Register user user.
      *
-     * @param user the user
+     * @param customer the user
      * @return the user
      */
-    User registerUser(User user);
+    Customer registerUser(Customer customer);
 
     /**
      * Login optional.
@@ -24,5 +24,5 @@ public interface UserService {
      * @param password the password
      * @return the optional
      */
-    Optional<User> login(String email, String password);
+    Optional<Customer> login(String email, String password);
 }
